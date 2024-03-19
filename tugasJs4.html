@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tugas JS 1</title>
+		<style>
+			body {
+				font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+					Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+					sans-serif;
+				background-color: #f2f2f2;
+				padding: 0;
+				margin: 0;
+			}
+
+			.container {
+				margin: 20px auto;
+				width: 75%;
+				background-color: white;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				padding: 20px;
+				border-radius: 10px;
+				overflow-x: scroll;
+			}
+
+			.row {
+				display: flex;
+				margin-bottom: 10px;
+			}
+
+			.col {
+				flex: 1;
+				margin: 0 5px;
+				/* padding: 0 10px;	 */
+			}
+			label {
+				display: block;
+				margin-bottom: 5px;
+			}
+
+			.input-form {
+				padding: 10px;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				width: 90%;
+				margin-bottom: 10px;
+			}
+
+			.btn {
+				padding: 10px 20px;
+				border: none;
+				background-color: #007bff;
+				color: white;
+				border-radius: 5px;
+				cursor: pointer;
+				display: block;
+				margin: 20px auto;
+			}
+
+			h1 {
+				text-align: center;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				/* fit  to contet*/
+			}
+
+			th,
+			td {
+				padding: 10px;
+			}
+
+			.center {
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<h1>PERHITUNGAN GAJI PEGAWAI</h1>
+			<br />
+			<form id="add-pegawai" class="mb-2">
+				<div class="row">
+					<div class="col">
+						<label for="nama">Nama</label>
+						<input
+							type="text"
+							name="nama"
+							placeholder="Masukan nama"
+							class="input-form"
+							required
+						/>
+					</div>
+					<div class="col">
+						<label for="jabatan">Jabatan</label>
+						<select
+							name="jabatan"
+							placeholder="Masukan jabatan"
+							class="input-form"
+							required
+						>
+							<option value="" selected>Pilih</option>
+							<option value="Manager">Manager</option>
+							<option value="Asisten Manager">Asisten Manager</option>
+							<option value="Staff">Staff</option>
+						</select>
+					</div>
+					<!-- <div class="col">
+						<label for="gaji">Gaji</label>
+						<input
+							type="number"
+							name="gaji"
+							placeholder="Masukan gaji"
+							class="input-form"
+							required
+						/>
+					</div> -->
+					<div class="col">
+						<label for="status">Status</label>
+						<select
+							name="status"
+							placeholder="Masukan status"
+							class="input-form"
+							required
+						>
+							<option value="" selected>pilih</option>
+							<option value="Menikah">Menikah</option>
+							<option value="Belum Menikah">Belum Menikah</option>
+						</select>
+					</div>
+				</div>
+				<button type="button" class="btn" onclick="kirimData()">Cek</button>
+			</form>
+
+			<table border="1px" cellpadding="5" cellspacing="0" id="table-data">
+				<thead bgcolor="lightgray">
+					<tr>
+						<th>Nama Pegawai</th>
+						<th>Jabatan</th>
+						<th>Status</th>
+						<th>Gaji Pokok</th>
+						<th>Tunjangan Jabatan</th>
+						<th>Tunjangan Status</th>
+						<th>BPJS</th>
+						<th>BPJS</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</body>
+
+	<script>
+		// fungsi get data
+		function kirimData() {
+			let form = document.getElementById("add-pegawai");
+			let data = new FormData(form);
+			let namaPegawai = data.get("nama");
+			let jabatan = data.get("jabatan");
+			let status = data.get("status");
+
+			// pengecekan inputan
+			if (namaPegawai == "" || jabatan == "" || status == "") {
+				alert("Data tidak boleh kosong");
+			} else {
+				// menampilkan data pegawai
+				tampilData(namaPegawai, jabatan, status);
+				// alert("Data berhasil ditambahkan");
+			}
+		}
+
+		// fungsi menampilkan data
+		function tampilData(namaPegawai, jabatan, status) {
+			// penentuan gaji pokok berdasarkan jabatan
+			if (jabatan == "Manager") {
+				gapok = 15000000;
+			} else if (jabatan == "Asisten Manager") {
+				gapok = 10000000;
+			} else if (jabatan == "Staff") {
+				gapok = 5000000;
+			}
+
+			// perhitungan tunjangan jabatan, tunjangan status, dan bpjs
+			let tunjanganJabatan = gapok * 0.15;
+			let tunjanganStatus = status == "Menikah" ? gapok * 0.2 : 0;
+			let bpjs = gapok * 0.1;
+			let totGaji = gapok + tunjanganJabatan + tunjanganStatus - bpjs;
+			// parse to content
+			let content = document.getElementById("table-data");
+			content.innerHTML = `
+		          <table border="1px" cellpadding="5" cellspacing="0">
+		              <thead bgcolor="lightgray">
+		                  <tr>
+		                      <th>Nama Pegawai</th>
+		                      <th>Jabatan</th>
+		                      <th>Status</th>
+		                      <th>Gaji Pokok</th>
+		                      <th>Tunjangan Jabatan</th>
+		                      <th>Tunjangan Status</th>
+		                      <th>BPJS</th>
+		                  </tr>
+		              </thead>
+		              <tbody>
+		                  <tr>
+		                      <td>${namaPegawai}</td>
+		                      <td>${jabatan}</td>
+		                      <td>${status}</td>
+		                      <td class="center">${gapok}</td>
+		                      <td class="center">${tunjanganJabatan}</td>
+		                      <td class="center">${tunjanganStatus}</td>
+		                      <td class="center">
+		                          ${bpjs}
+		                          </td>
+		                  </tr>
+		              </tbody>
+		              <tfoot bgcolor="lightgray">
+		                  <tr>
+		                      <td colspan="6" class="center">Total Gaji</td>
+		                      <td class="center">${totGaji}</td>
+		                  </tr>
+		              </tfoot>
+		          </table>
+		      `;
+		}
+	</script>
+</html>
